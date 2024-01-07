@@ -11,11 +11,11 @@ from matplotlib.animation import FuncAnimation, PillowWriter
 ###============ USER INPUT PARAMETERS ================
 
 BOX_SIDE_LENGTH = 5.0   # Side legth of the simulation box
-R_CUT = 4.0             # Cutoff radius beyond which interactions are ignored
+R_CUT = 3.0             # Cutoff radius beyond which interactions are ignored
 PARTICLE_NUMBER = 25    # Total number of particles in the simulation
-SPEED_AMPLITUDE = 12    # Initial speed amplitude of particles
-TIMESTEP = 0.004        # Simulation timestep
-TOTAL_TIME = 6.0        # Total time to propagate
+SPEED_AMPLITUDE = 11    # Initial speed amplitude of particles
+TIMESTEP = 0.005        # Simulation timestep
+TOTAL_TIME = 7.0        # Total time to propagate
 COOL_FACTOR = 0.997     # Factor multiplying the velocities
 
 ###===================================================
@@ -55,12 +55,12 @@ def animate(t):
         line, = ax.plot(location[0], location[1], 'ro', markersize=8)
         images.append(line)
     running_avg = np.array(temperatures)[-200:].mean()
-    text = plt.text(0.6, 5.2, 'Temperature = {:.2f}'.format(running_avg), fontsize = 20)
+    text = plt.text(0.1, 5.2, 'Temperature = {:.2f} r.u.'.format(running_avg), fontsize = 20)
     images.append(text)
     # end for
     return images
 # end animate
  
 ani = FuncAnimation(fig, animate, interval=1, blit=True, repeat=True, frames=int(TOTAL_TIME/TIMESTEP))
-ani.save("animation.gif", dpi=150, writer=PillowWriter(fps = 25))
+ani.save("animation.gif", dpi=140, writer=PillowWriter(fps = 25))
 
