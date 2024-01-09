@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
 import numpy as np
+import matplotlib.pyplot as plt
+
 
 class Particle:
     """Class representing a particle in a simulation.
@@ -33,12 +35,12 @@ class Particle:
         Calculate the momentum of the particle.
     """
 
-    def __init__(self, location = [None, None], velocity = [None, None], acceleration = [None, None]):
+    def __init__(self, location=[None, None], velocity=[None, None], acceleration=[None, None]):
         self._MASS = 1.0
         self.location = np.array(location)
         self.velocity = np.array(velocity)
         self.acceleration = np.array(acceleration)
-    #end __init__
+    # end __init__
 
     def get_kinetic_energy(self):
         """Calculate the kinetic energy of the particle.
@@ -48,7 +50,7 @@ class Particle:
         float
             The kinetic energy of the particle.
         """
-        kinetic_energy = self._MASS * (self.velocity**2).sum() * 0.5 # KE = (mv^2)/2
+        kinetic_energy = self._MASS * (self.velocity**2).sum() * 0.5   # KE = (mv^2)/2
         return kinetic_energy
     # end get_kinetic_energy
 
@@ -60,11 +62,12 @@ class Particle:
         numpy.ndarray
             The momentum of the particle.
         """
-        momentum = self._MASS * self.velocity # M = mv
+        momentum = self._MASS * self.velocity   # M = mv
         return momentum
     # end get_momentum
 
 # end Particle
+
 
 class Interaction:
     """Class representing particle interactions.
@@ -111,7 +114,7 @@ class Interaction:
             V = 0
         return V
     # end LJ_potential
-    
+
     def LJ_force(self, r):
         """Calculate the Lennard-Jones force for a given distance.
 
@@ -134,6 +137,7 @@ class Interaction:
     # end LJ_force
 
 # end Interaction
+
 
 class Box:
     """Class representing a simulation box.
@@ -160,7 +164,7 @@ class Box:
 
     def __init__(self, BOX_SIDE_LENGTH, R_CUT):
         self._BOX_SIDE_LENGTH = BOX_SIDE_LENGTH
-        self._interaction = Interaction(R_CUT) # using Composition for more flexible code ("has-a" relationship)
+        self._interaction = Interaction(R_CUT)   # using Composition for more flexible code ("has-a" relationship)
     # end def
 
     def set_periodic_boundary(self, r):
@@ -181,9 +185,10 @@ class Box:
             r *= 1 - self._BOX_SIDE_LENGTH/abs(r)
         return r
     # end def
-# end Box    
+# end Box
 
-class Ensemble(Box): # Ensemble inherits from Box
+
+class Ensemble(Box):  # Ensemble inherits from Box
     """Class representing an ensemble of particles within a simulation box.
 
     Parameters
@@ -236,23 +241,23 @@ class Ensemble(Box): # Ensemble inherits from Box
         Plot the ensemble configuration.
     """
 
-    def __init__(self, BOX_SIDE_LENGTH, PARTICLE_NUMBER, R_CUT): # initialize an empty box
+    def __init__(self, BOX_SIDE_LENGTH, PARTICLE_NUMBER, R_CUT):   # initialize an empty box
         super().__init__(BOX_SIDE_LENGTH, R_CUT)
         self._PARTICLE_NUMBER = PARTICLE_NUMBER
         self._particles = []
     # end __init__
 
-    def generate_particles(self): # set the positions
+    def generate_particles(self):   # set the positions
         """Generate particles and set their initial positions."""
-        particle_root_1 = int(np.ceil(np.sqrt(self._PARTICLE_NUMBER)))          # 1st internal value to evenly place the particles
-        particle_root_2 = int(np.ceil(self._PARTICLE_NUMBER / particle_root_1)) # 2nd internal value to evenly place the particles
+        particle_root_1 = int(np.ceil(np.sqrt(self._PARTICLE_NUMBER)))            # 1st internal value to evenly place the particles
+        particle_root_2 = int(np.ceil(self._PARTICLE_NUMBER / particle_root_1))   # 2nd internal value to evenly place the particles
         added_particles = 0
         for i in range(particle_root_1):
             for j in range(particle_root_2):
                 Lx = (i + 0.5) * self._BOX_SIDE_LENGTH / particle_root_1
                 Ly = (j + 0.5) * self._BOX_SIDE_LENGTH / particle_root_2
                 if added_particles < self._PARTICLE_NUMBER:
-                    self._particles.append(Particle([Lx, Ly])) # using Composition for more flexible code ("has-a" relationship)
+                    self._particles.append(Particle([Lx, Ly]))   # using Composition for more flexible code ("has-a" relationship)
                     added_particles += 1
                 else:
                     return
@@ -301,13 +306,13 @@ class Ensemble(Box): # Ensemble inherits from Box
         total_potential = 0
         for i in range(0, self._PARTICLE_NUMBER):
             for j in range(0, self._PARTICLE_NUMBER):
-                if i==j: # avoid self-interaction
+                if i == j:   # avoid self-interaction
                     continue
                 pair_distance = self._particles[j].location - self._particles[i].location
                 pair_distance[0] = self.set_periodic_boundary(pair_distance[0])
                 pair_distance[1] = self.set_periodic_boundary(pair_distance[1])
                 distance_norm = np.linalg.norm(pair_distance)
-                total_potential = (total_potential + self._interaction.LJ_potential(distance_norm)) / 2.0 # divide by two because it counts twice
+                total_potential = (total_potential + self._interaction.LJ_potential(distance_norm)) / 2.0   # divide by two because it counts twice
             total_kinetic = total_kinetic + self._particles[i].get_kinetic_energy()
         # end for
         total_energy = total_kinetic + total_potential
@@ -344,7 +349,7 @@ class Ensemble(Box): # Ensemble inherits from Box
         for i in range(0, self._PARTICLE_NUMBER):
             particle_acceleration = 0
             for j in range(0, self._PARTICLE_NUMBER):
-                if i==j: # avoid self-interaction
+                if i == j:   # avoid self-interaction
                     continue
                 pair_distance = self._particles[j].location - self._particles[i].location
                 pair_distance[0] = self.set_periodic_boundary(pair_distance[0])
@@ -354,7 +359,7 @@ class Ensemble(Box): # Ensemble inherits from Box
             self._particles[i].acceleration = particle_acceleration
     # end update_ensemble_acceleration
 
-    def propagate_velocity_verlet(self, dt): # this is the Velocity-Verlet algorithm
+    def propagate_velocity_verlet(self, dt):   # this is the Velocity-Verlet algorithm
         """Propagate particle positions and velocities using the Velocity-Verlet algorithm.
 
         Parameters
@@ -362,7 +367,7 @@ class Ensemble(Box): # Ensemble inherits from Box
         dt : float
             Time step for the integration.
         """
-        #self.update_ensemble_acceleration()
+        # self.update_ensemble_acceleration()
         # update the positions and partly velocity
         for i in range(0, self._PARTICLE_NUMBER):
             self._particles[i].location = (self._particles[i].location + self._particles[i].velocity * dt + 0.5 * self._particles[i].acceleration * dt**2) % self._BOX_SIDE_LENGTH
@@ -416,10 +421,9 @@ class Ensemble(Box): # Ensemble inherits from Box
         plt.xticks([])
         plt.yticks([])
         plt.gca().set_aspect('equal')
-        #plt.pause(0.001)
-        #ax.cla()
+        # plt.pause(0.001)
+        # ax.cla()
         plt.show()
     # end plot_ensemble
 
 # end Ensemble
-
