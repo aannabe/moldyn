@@ -22,7 +22,7 @@ cd ..
 sphinx-apidoc -o docs/source . setup.py # excludes setup.py
 ```
 
-Include `modules` in `docs/source/index.rst`
+Include `modules` in `docs/source/index.rst`.
 
 ```
 cd docs
