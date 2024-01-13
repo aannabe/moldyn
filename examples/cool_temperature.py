@@ -1,8 +1,14 @@
 #!/usr/bin/env python
 
 import sys
-sys.path.append('../moldyn/')
-from base import *
+
+# One can import functionality from individual files ignoring the package structure
+# sys.path.append('../moldyn/')
+# from base import *
+
+# Import functionality using the package structure 
+sys.path.append('../')
+from moldyn.base import *
 
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
