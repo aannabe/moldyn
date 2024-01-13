@@ -10,3 +10,4 @@ For instance, the animation below shows how a fluid changes to a solid state as 
 
 ![](https://github.com/aannabe/moldyn/blob/main/examples/animation.gif)
 
+Read the [Documentation](https://aannabe-moldyn.readthedocs.io/en/latest/) and see [examples](https://github.com/aannabe/moldyn/tree/main/examples).
