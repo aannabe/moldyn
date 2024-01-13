@@ -19,4 +19,4 @@ The key user input parameters and usage are shown in the below code snippet:
     ensemble.normalize_momentum()
     ensemble.update_ensemble_acceleration()
 
-See an example `here <https://github.com/aannabe/moldyn/blob/main/examples/cool_temperature.py>`_
+See an example `here <https://github.com/aannabe/moldyn/blob/main/examples/cool_temperature.py>`_.
