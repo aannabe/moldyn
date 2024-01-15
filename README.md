@@ -1,7 +1,7 @@
 # Simulating Realistic Matter Behavior with Molecular Dynamics
 
 [![Documentation Status](https://readthedocs.org/projects/aannabe-moldyn/badge/?version=latest)](https://aannabe-moldyn.readthedocs.io/en/latest/?badge=latest)
-![Python Package Workflow](https://github.com/aannabe/moldyn/actions/workflows/python-package.yml/badge.svg)
+[![Python Package Workflow](https://github.com/aannabe/moldyn/actions/workflows/python-package.yml/badge.svg)](https://github.com/aannabe/moldyn/actions)
 
 This repository demonstrates that realistic matter behavior can be obtained using simple effective models, such as [Lennard-Jones](https://en.wikipedia.org/wiki/Lennard-Jones_potential) potential:
 
